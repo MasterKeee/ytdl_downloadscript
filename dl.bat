@@ -29,13 +29,15 @@ REM 创建临时文件来保存修改后的链接和标题
 set "temp_file=%~dpn1_temp%~x1"
 
 REM 下载视频并写入标题到原始文本文件
+set "counter=1"
 for /f "usebackq delims=" %%A in ("%file%") do (
     echo Downloading: %%A
     for /f "delims=" %%T in ('youtube-dl --get-title "%%A"') do (
         set "title=%%T"
         echo Title: !title!
-        youtube-dl --output "%output_dir%\!title!.%%(ext)s" "%%A"
-        echo %%A !title!>>"%temp_file%"
+        youtube-dl --output "%output_dir%\[!counter!] !title!.%%(ext)s" "%%A"
+        echo [!counter!] !title! %%A>>"%temp_file%"
+        set /a "counter+=1"
     )
 )
 
